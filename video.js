@@ -27,20 +27,32 @@ const loadVideos = async () => {
     .catch(error => console.error('Error fetching categories:', error));
 }
 
+// load videos from the API based on category
+const loadCategoriyVideos = (id) => {
+    // alert(id);
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then(response => response.json())
+    .then(data => displayVideos(data.category))
+}
+
 // show displayCategories
 const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
     categories.map((item)=>{
-    const button = document.createElement('button');
-    button.classList = "btn";
-    button.innerText = (item.category);
-    categoryContainer.append(button);
+    const buttonContainer = document.createElement('div');
+    buttonContainer.innerHTML = `
+    <button onclick="loadCategoriyVideos(${item.category_id})" class="btn btn-ghost btn-sm rounded-btn">
+      ${item.category}
+    </button>
+    `
+    categoryContainer.append(buttonContainer);
     })
 }
 
 // show displayVideos
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('videos');
+    videoContainer.innerHTML = ''; // Clear previous videos
     videos.forEach(video => {
         const videoCard = document.createElement('div');
         videoCard.classList = "card card-compact bg-base-100 shadow-xl";
@@ -49,7 +61,7 @@ const displayVideos = (videos) => {
     <img
       src="${video.thumbnail}" 
       class="w-full h-full object-cover"/>
-      ${video.others.posted_date.length > 0 ? `<span class="absolute right-2 bottom-2 rounded bg-black bg-opacity-50 text-white text-xs px-1">${timeString(video.others.posted_date)}</span>` : ''}
+      ${video.others.posted_date.length > 0 ? `<span class="absolute right-2 bottom-2 text-xs rounded bg-black bg-opacity-50 text-white px-1">${timeString(video.others.posted_date)}</span>` : ''}
   </figure>
 
 
