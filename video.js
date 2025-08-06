@@ -53,6 +53,19 @@ const displayCategories = (categories) => {
 const displayVideos = (videos) => {
     const videoContainer = document.getElementById('videos');
     videoContainer.innerHTML = ''; // Clear previous videos
+    if (videos.length === 0) {
+        videoContainer.classList.remove('grid');
+        videoContainer.innerHTML = `
+        <div class="flex flex-col justify-center items-center min-h[300px]">
+         <img src="icon.png" alt="No videos found">
+        <h1 class="text-center text-gray-500">No videos found for this category.</h1>
+        </div>
+        `;
+        return;
+    }else{
+        videoContainer.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-4');
+        videoContainer.classList.remove('flex', 'justify-center', 'items-center', 'h-screen');
+    }
     videos.forEach(video => {
         const videoCard = document.createElement('div');
         videoCard.classList = "card card-compact bg-base-100 shadow-xl";
