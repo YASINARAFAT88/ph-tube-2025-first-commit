@@ -1,0 +1,5 @@
+.active{
+    background-color: #a71501; /* Darker background for active state */
+    color: white; /* White text for better contrast */
+    border-color: #680801; /* Darker border for active state */
+}

@@ -16,7 +16,26 @@
                 <img class=" " src="logo.png" alt="Ph-Tube Logo">
             </div>
             <div class="search">
-                <input type="text" placeholder="Search" class="input input-bordered w-100 md:w-auto" />
+                <!-- <label class="input">
+  <svg class="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <g
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      stroke-width="2.5"
+      fill="none"
+      stroke="currentColor"
+    >
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.3-4.3"></path>
+    </g>
+  </svg>
+  <input type="search" class="grow" placeholder="Search" />
+  <kbd class="kbd kbd-sm">⌘</kbd>
+  <kbd class="kbd kbd-sm">K</kbd>
+</label> -->
+                <input id="search-input" type="text" placeholder="Search" class="input input-bordered w-100 md:w-auto" />
+               
+                <button id="search-button" class="btn btn-primary ml-2">Search</button>
             </div>
             <div class="sort">
                 <button class="btn">Sort</button>
@@ -28,6 +47,22 @@
     <main>
         <section id="videos" class="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 gap-4 py-10"></section>
     </main>
+
+    <!-- Open the modal using ID.showModal() method -->
+<button id="showModal" class="btn hidden" onclick="custom_Modal.showModal()">open modal</button>
+<dialog id="custom_Modal" class="modal modal-bottom sm:modal-middle">
+  <div class="modal-box">
+    <div id="modal-content">
+
+    </div>
+    <div class="modal-action">
+      <form method="dialog">
+        <!-- if there is a button in form, it will close the modal -->
+        <button class="btn">Close</button>
+      </form>
+    </div>
+  </div>
+</dialog>
     <script src="video.js"></script>
 </body>
 </html>

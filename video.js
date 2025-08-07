@@ -9,6 +9,42 @@ function timeString(time) {
     
 }
 
+// remove the active class from all buttons
+const removeActiveClass = () => {
+    const activeButtons = document.querySelectorAll('.category-btn.active');
+    activeButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+}
+
+// show video details
+const showVideoDetails = async (videoId) => {
+    console.log(videoId);
+    const response = await fetch(`https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`);
+    const data = await response.json();
+    displayVideoDetails(data.video);
+}
+
+// display video details in a modal
+const displayVideoDetails = (video) => {
+    console.log(video);
+    const modal = document.getElementById('modal-content');
+    modal.innerHTML = `
+    <img src="${video.thumbnail}" class="w-full h-[300px] object-cover" alt="Video Thumbnail">
+    <h2 class="text-xl font-bold mt-4">${video.title}</h2>
+    <p class="text-gray-500 mt-2">${video.description}</p>
+    <div class="flex items-center gap-2 mt-4">
+        <img src="${video.authors[0].profile_picture}" class="w-10 h-10 rounded-full object-cover" alt="Author Profile Picture">
+        <div>
+            <p class="font-bold">${video.authors[0].profile_name}</p>
+            ${video.authors[0].verified ? '<img class="w-4 h-4" src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png">' : ''}
+        </div>
+    `
+
+    document.getElementById('showModal').click();
+}
+
+
 // fetch, load, and show categories in html
 
 // Load categories from the API
@@ -21,7 +57,7 @@ const loadCategories = async () => {
 
 // Load videos from the API
 const loadVideos = async () => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+    fetch('https://openapi.programming-hero.com/api/phero-tube/videos?title=')
     .then(response => response.json())
     .then(data => displayVideos(data.videos))
     .catch(error => console.error('Error fetching categories:', error));
@@ -32,7 +68,14 @@ const loadCategoriyVideos = (id) => {
     // alert(id);
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
     .then(response => response.json())
-    .then(data => displayVideos(data.category))
+    .then(data => {
+        // Remove active class from all buttons
+        removeActiveClass();
+        const activeButton = document.getElementById(`category-${id}`);
+        activeButton.classList.add('active');
+        console.log(activeButton);
+        displayVideos(data.category)
+    })
 }
 
 // show displayCategories
@@ -41,7 +84,7 @@ const displayCategories = (categories) => {
     categories.map((item)=>{
     const buttonContainer = document.createElement('div');
     buttonContainer.innerHTML = `
-    <button onclick="loadCategoriyVideos(${item.category_id})" class="btn btn-ghost btn-sm rounded-btn">
+    <button id="category-${item.category_id}" onclick="loadCategoriyVideos(${item.category_id})" class="btn btn-ghost category-btn btn-sm rounded-btn">
       ${item.category}
     </button>
     `
@@ -89,7 +132,11 @@ const displayVideos = (videos) => {
       <p class="text-gray-400">${video.authors[0].profile_name} </p>
       ${video.authors[0].verified === true ? '<img class="w-4 h-4" src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png">' : ''}
       </div>
-      <p></p>
+      <p>
+      <button onclick="showVideoDetails('${video.video_id}')" class="btn btn-sm btn-ghost text-gray-500 hover:text-gray-700">
+        details
+      </button>
+      </p>
       <p></p>
       </div>
   </div>
@@ -97,6 +144,21 @@ const displayVideos = (videos) => {
         videoContainer.appendChild(videoCard);
     });
 }
+
+// Event listener for search input
+document.getElementById('search-input').addEventListener('keyup', function() {
+    const query = this.value.toLowerCase();
+    const videoCards = document.querySelectorAll('#videos .card');
+    videoCards.forEach(card => {
+        const title = card.querySelector('h2').textContent.toLowerCase();
+        if (title.includes(query)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
 // Call the function to load categories
 loadCategories();
 loadVideos();
